@@ -1,0 +1,18 @@
+.container {
+    margin-top: 20px;
+}
+
+.question:hover {
+    background-color: #cce2ff;
+}
+
+.question .item {
+    display: flex;
+    align-items: center;
+}
+
+.question .content {
+    text-decoration: none;
+    margin-left: 10px;
+    color: #343232;
+}
