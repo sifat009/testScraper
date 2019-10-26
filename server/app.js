@@ -1,19 +1,19 @@
 const express = require('express');
-const app = express();
 const cors = require('cors');
+const app = express();
 const getQuestions = require('./getQuestions');
 const port = process.env.PORT || 5000;
 
 
 app.use(cors());
 
-app.get('/questions', async (req, res) => {
+app.get('/api/questions', async (req, res) => {
     const questions = await getQuestions();
     res.status(200).json({questions})
 })
 
 app.get('/', (req, res) => {
-    res.status(200).json({message: `please visit '/questions' url to get all new questions`})
+    res.status(200).json({message: `please visit '/api/questions' url to get all new questions`})
 })
 
 
