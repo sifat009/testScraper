@@ -14,7 +14,7 @@ const getUnanswered = async (url) => {
     const $questionBody = $newQuestions.find('.media-body > a');
     $questionBody.each((index, question) => {
         const title = $(question).text().trim();
-        const href = $(question).attr('href');  
+        const href = $(question).attr('href');
         const alreadyExists = questionList.some(question => question.title === title);
         if(!alreadyExists) {
             questionList.push({
