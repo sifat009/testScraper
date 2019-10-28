@@ -9,7 +9,8 @@ app.use(cors());
 
 app.get('/api/questions', async (req, res) => {
     const questions = await getQuestions();
-    res.status(200).json({questions})
+    const totalQuestions = questions.length;
+    res.status(200).json({ totalQuestions, questions})
 })
 
 app.get('/', (req, res) => {
