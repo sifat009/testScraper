@@ -20,10 +20,12 @@ class App extends React.Component {
     async getQuestions() {
         const response = await fetch('/api/questions');
         const {questions} = await response.json();
-        const questionList = questions.map((question, index) => {
-            return <Question key={index} title={question.title} href={question.href} />
-        });
-        this.setState({questionList})
+        if(questions) {
+            const questionList = questions.map((question, index) => {
+                return <Question key={index} title={question.title} href={question.href} />
+            });
+            this.setState({questionList})
+        }
     }
 
     render() {
@@ -32,7 +34,7 @@ class App extends React.Component {
                 {
                     this.state.questionList.length > 0 
                         ? this.state.questionList
-                        : <Loader text="Fetching questions..." />
+                        : <Loader text="Fetching unanswered questions..." />
                 }
             </div>
         )
