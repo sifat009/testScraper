@@ -2,22 +2,29 @@ const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 
 const themeumUrls = {
-    'themeForestUrl': `https://www.themeum.com/tf/tfsupport/?filter=notanswered`,
-    'themeumUrl': `https://www.themeum.com/topics/?filter=notanswered`,
+    'themeforest': `https://www.themeum.com/tf/tfsupport/?filter=notanswered`,
+    'themeum': `https://www.themeum.com/topics/?filter=notanswered`,
 }
 
 const wordpressUrls = {
-    'wordpressTutor': `https://wordpress.org/support/plugin/tutor/`,
-    'wordpressQubely': `https://wordpress.org/support/plugin/qubely/`,
-    'wordpressWpPagebuilder': `https://wordpress.org/support/plugin/wp-pagebuilder/`,
-    'wordpressSalesBooster': `https://wordpress.org/support/plugin/sales-booster-for-woocommerce/`,
-    'wordpressWpMegamenu': `https://wordpress.org/support/plugin/wp-megamenu/`,
-    'wordpressCrowdFunding': `https://wordpress.org/support/plugin/wp-crowdfunding/`,
-    'wordpressWpSupportDesk': `https://wordpress.org/support/plugin/wp-support-desk/`,
+    'tutor': `https://wordpress.org/support/plugin/tutor/`,
+    'qubely': `https://wordpress.org/support/plugin/qubely/`,
+    'wp-pagebuilder': `https://wordpress.org/support/plugin/wp-pagebuilder/`,
+    'sales-booster-for-woocommerce': `https://wordpress.org/support/plugin/sales-booster-for-woocommerce/`,
+    'wp-megamenu': `https://wordpress.org/support/plugin/wp-megamenu/`,
+    'wp-crowdfunding': `https://wordpress.org/support/plugin/wp-crowdfunding/`,
+    'wp-support-desk': `https://wordpress.org/support/plugin/wp-support-desk/`,
 }
+
+const getCategory = (url) => {
+    const allUrls = {...wordpressUrls, ...themeumUrls};
+    return Object.keys(allUrls).find(key => allUrls[key] === url)
+}
+
 
 const questionList = [];
 const getUnanswered = async (url) => {
+    const category = getCategory(url);
     const res = await fetch(url);
     const data = await res.text();
     const $ = cheerio.load(data);
@@ -36,6 +43,7 @@ const getUnanswered = async (url) => {
         if(!alreadyExists) {
             questionList.push({
                 title,
+                category,
                 href
             });
         }
@@ -44,15 +52,15 @@ const getUnanswered = async (url) => {
 }
 
 const getQuestions = async () => {
-    return Promise.all([getUnanswered(themeumUrls.themeumUrl),
-        getUnanswered(themeumUrls.themeForestUrl),
-        getUnanswered(wordpressUrls.wordpressCrowdFunding),
-        getUnanswered(wordpressUrls.wordpressQubely),
-        getUnanswered(wordpressUrls.wordpressSalesBooster),
-        getUnanswered(wordpressUrls.wordpressTutor),
-        getUnanswered(wordpressUrls.wordpressWpMegamenu),
-        getUnanswered(wordpressUrls.wordpressWpPagebuilder),
-        getUnanswered(wordpressUrls.wordpressWpSupportDesk)])
+    return Promise.all([getUnanswered(themeumUrls['themeum']),
+        getUnanswered(themeumUrls['themeforest']),
+        getUnanswered(wordpressUrls['wp-crowdfunding']),
+        getUnanswered(wordpressUrls['qubely']),
+        getUnanswered(wordpressUrls['sales-booster-for-woocommerce']),
+        getUnanswered(wordpressUrls['tutor']),
+        getUnanswered(wordpressUrls['wp-megamenu']),
+        getUnanswered(wordpressUrls['wp-pagebuilder']),
+        getUnanswered(wordpressUrls['wp-support-desk'])])
         .then(res => {
             return questionList;
         })
