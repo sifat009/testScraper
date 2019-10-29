@@ -22,7 +22,7 @@ class App extends React.Component {
         const {questions} = await response.json();
         if(questions) {
             const questionList = questions.map((question, index) => {
-                return <Question key={index} title={question.title} href={question.href} />
+                return <Question key={index} title={question.title} href={question.href} category={question.category} />
             });
             this.setState({questionList})
         }

@@ -7,7 +7,7 @@ class Question extends React.Component {
                 <a href={this.props.href} target="_blank" rel="noopener noreferrer">
                     <div className="item">
                         <div className="ui teal label">
-                            <i className="comment alternate icon"></i>New
+                            <i className="comment alternate icon"></i>{this.props.category}
                         </div>
                         <div className="content">
                             <div className="header">{this.props.title}</div>
@@ -17,6 +17,10 @@ class Question extends React.Component {
             </div>
         )
     }
+}
+
+Question.defaultProps = {
+    'category': 'new'
 }
 
 export default Question;
