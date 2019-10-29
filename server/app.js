@@ -8,9 +8,13 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 
 app.get('/api/questions', async (req, res) => {
-    const questions = await getQuestions();
-    const totalQuestions = questions.length || 0;
-    res.status(200).json({ totalQuestions, questions})
+    try {
+        const questions = await getQuestions();
+        const totalQuestions = questions.length || 0;
+        res.status(200).json({ totalQuestions, questions})
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 app.get('/', (req, res) => {
