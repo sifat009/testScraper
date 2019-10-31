@@ -25,29 +25,34 @@ const getCategory = (url) => {
 const questionList = [];
 const getUnanswered = async (url) => {
     const category = getCategory(url);
-    const res = await fetch(url);
-    const data = await res.text();
-    const $ = cheerio.load(data);
-    let $questionBody = [];
-    if(!url.includes('wordpress.org')) {
-        let $newQuestions = $(".bbp-body > ul:not(.super-sticky) > li.bbp-thm-topic-title:has(span.status-new)");
-        $questionBody = $newQuestions.find('.media-body > a');
-    } else {
-        let $newQuestions = $(".bbp-body > ul:not(.sticky) > li.bbp-topic-title:not(:has(span.resolved))");
-        $questionBody = $newQuestions.find('> a');
-    }
-    $questionBody.each((index, question) => {
-        const title = $(question).text().trim();
-        const href = $(question).attr('href');
-        const alreadyExists = questionList.some(question => question.title === title);
-        if(!alreadyExists) {
-            questionList.push({
-                title,
-                category,
-                href
-            });
+    try {
+        const res = await fetch(url);
+        const data = await res.text();
+        const $ = cheerio.load(data);
+        let $questionBody = [];
+        if(!url.includes('wordpress.org')) {
+            let $newQuestions = $(".bbp-body > ul:not(.super-sticky) > li.bbp-thm-topic-title:has(span.status-new)");
+            $questionBody = $newQuestions.find('.media-body > a');
+        } else {
+            let $newQuestions = $(".bbp-body > ul:not(.sticky) > li.bbp-topic-title:not(:has(span.resolved))");
+            $questionBody = $newQuestions.find('> a');
         }
-    })
+        $questionBody.each((index, question) => {
+            const title = $(question).text().trim();
+            const href = $(question).attr('href');
+            const alreadyExists = questionList.some(question => question.title === title);
+            if(!alreadyExists) {
+                questionList.push({
+                    title,
+                    category,
+                    href
+                });
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
     return questionList;
 }
 
