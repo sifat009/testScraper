@@ -9,8 +9,12 @@ class App extends React.Component {
 
     componentDidMount() {
         this.intervalId = setInterval( async () => {
-            await this.getQuestions();
-        }, 3000);
+            try {
+                await this.getQuestions();
+            } catch (error) {
+                console.log(error)
+            }
+        }, 10000);
     }
 
     componentWillUnmount() {
@@ -19,6 +23,9 @@ class App extends React.Component {
 
     async getQuestions() {
         const response = await fetch('/api/questions');
+        if(!response.ok) {
+            throw new Error(`HTTP status: ${response.status}`);
+        }
         const {questions} = await response.json();
         if(questions) {
             const questionList = questions.map((question, index) => {
